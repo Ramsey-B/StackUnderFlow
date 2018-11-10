@@ -1,8 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <RuntimeFrameworkVersion>2.1</RuntimeFrameworkVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20181108043229_CreateTables.cs" />
+    <Compile Remove="Migrations\20181108043958_CreateTables2.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.1.3" />

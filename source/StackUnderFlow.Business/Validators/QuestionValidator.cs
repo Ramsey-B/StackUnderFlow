@@ -13,12 +13,11 @@ namespace StackUnderFlow.Business.Validators
             {
                 question.Title = "Question has been marked as inappropriate!";
                 question.Body = "If you are bald, what hair color do they put on your driver's license?";
-                question.Topics = new List<QuestionTopics>();
             }
             return question;
         }
 
-        public static Question ValidateQuestionChanges(Question realQ, Question submitQ)
+        public static Question ValidateQuestionChanges(Question realQ, IQuestion submitQ)
         {
             if (realQ.UpVotes != submitQ.UpVotes)
             {

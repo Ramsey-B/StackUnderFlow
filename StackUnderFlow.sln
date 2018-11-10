@@ -3,13 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2048
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StackUnderFlow.Entities", "source\StackUnderFlow.Entities\StackUnderFlow.Entities.csproj", "{C1447DD6-4E6B-4BFB-84B8-91BAF61BFFA2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StackUnderFlow.Entities", "source\StackUnderFlow.Entities\StackUnderFlow.Entities.csproj", "{C1447DD6-4E6B-4BFB-84B8-91BAF61BFFA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StackUnderFlow.Web", "source\StackUnderFlow.Web\StackUnderFlow.Web.csproj", "{4FAB2EC8-0D2B-4A93-84D7-77FC52538C1C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StackUnderFlow.Web", "source\StackUnderFlow.Web\StackUnderFlow.Web.csproj", "{4FAB2EC8-0D2B-4A93-84D7-77FC52538C1C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C1447DD6-4E6B-4BFB-84B8-91BAF61BFFA2} = {C1447DD6-4E6B-4BFB-84B8-91BAF61BFFA2}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StackUnderFlow.Data", "source\StackUnderFlow.Data\StackUnderFlow.Data.csproj", "{CDB6547A-EE31-42E0-96F9-2FA1AC49E1B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StackUnderFlow.Data", "source\StackUnderFlow.Data\StackUnderFlow.Data.csproj", "{CDB6547A-EE31-42E0-96F9-2FA1AC49E1B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StackUnderFlow.Business", "source\StackUnderFlow.Business\StackUnderFlow.Business.csproj", "{06F09FCF-B4F8-4812-AC83-3E48599D2EB0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StackUnderFlow.Business", "source\StackUnderFlow.Business\StackUnderFlow.Business.csproj", "{06F09FCF-B4F8-4812-AC83-3E48599D2EB0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

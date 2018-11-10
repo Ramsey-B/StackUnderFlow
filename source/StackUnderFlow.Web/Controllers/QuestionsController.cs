@@ -2,18 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using StackUnderFlow.Business;
 using StackUnderFlow.Entities;
 
 namespace StackUnderFlow.Web.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class QuestionsController : ControllerBase
+    public class QuestionsController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly QuestionsService _questionsService;
@@ -24,131 +22,128 @@ namespace StackUnderFlow.Web.Controllers
             _userManager = userManager;
         }
 
+        // GET: Questions
         [HttpGet]
-        public IActionResult GetQuestions()
+        [AllowAnonymous]
+        public IActionResult Index()
         {
-            return Ok(_questionsService.GetQuestions());
+            return View(_questionsService.GetQuestions());
         }
 
-        [HttpGet("{questionId}")]
-        public IActionResult GetQuestionById(int questionId)
+        // GET: Questions/Details/5
+        [HttpGet()]
+        public IActionResult Details(int id)
         {
             try
             {
-                var question = _questionsService.GetQuestionById(questionId);
-                return Ok(question);
+                var question = _questionsService.GetQuestionById(id);
+                return View(question);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return NotFound();
             }
         }
 
-        [HttpGet("topic/{topic}")]
-        public IActionResult GetQuestionsByTopic(string topic)
+        // GET: Questions/Create
+        public ActionResult Create()
         {
-            try
-            {
-                var questions = _questionsService.GetQuestionsByTopic(topic);
-                return Ok(questions);
-            }
-            catch(Exception)
-            {
-                return NotFound();
-            }
+            return View();
         }
 
-        [HttpGet("user/{userId}")]
-        public IActionResult GetQuestionsByUserId(string userId)
-        {
-            try
-            {
-                var question = _questionsService.GetQuestionsByUserId(userId);
-                return Ok(question);
-            }
-            catch(Exception)
-            {
-                return NotFound();
-            }
-        }
-
-        [Authorize]
-        [HttpGet("user")]
-        public async Task<IActionResult> GetUsersQuestions()
-        {
-            try
-            {
-                var user = await _userManager.GetUserAsync(HttpContext.User);
-                var questions = _questionsService.GetQuestionsByUserId(user.Id);
-                return Ok(questions);
-            }
-            catch(Exception)
-            {
-                return NotFound();
-            }
-        } 
-
-        [Authorize]
+        // POST: Questions/Create
         [HttpPost]
-        public async Task<IActionResult> CreateQuestion([FromBody]Question newQuestion)
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Create([Bind("Title,Body,Author,AuthorId,Answered,Inappropriate,UpVotes,DownVotes,Id,Topics")]Question newQuestion)
         {
             try
             {
-                var user = await _userManager.GetUserAsync(HttpContext.User);
-                var question = _questionsService.CreateQuestion(newQuestion, user);
-                return Created("", question);
+                if (!ModelState.IsValid)
+                {
+                    throw new Exception();
+                }
+                try
+                {
+                    var user = await _userManager.GetUserAsync(HttpContext.User);
+                    var question = _questionsService.CreateQuestion(newQuestion, user);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception)
+                {
+                    return BadRequest();
+                }
             }
-            catch(Exception)
+            catch
             {
-                return BadRequest();
+                return View(newQuestion);
             }
         }
 
-        [Authorize]
-        [HttpPut("{questionId}")]
-        public async Task<IActionResult> EditQuestion([FromBody]Question editQuestion, int questionId)
+        public IActionResult CreateTopic()
+        {
+            return View();
+        }
+
+        // GET: Questions/Edit/5
+        public ActionResult Edit(int id)
+        {
+            return View();
+        }
+
+        // POST: Questions/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Edit(int questionId, [Bind("Title,Body,Answered,Inappropriate,UpVotes,DownVotes,Topics")]Question editQuestion)
         {
             try
             {
                 editQuestion.Id = questionId;
                 var user = await _userManager.GetUserAsync(HttpContext.User);
                 var newQuestion = _questionsService.EditQuestion(editQuestion, user);
-                return Ok(newQuestion);
+                return RedirectToAction(nameof(Index));
             }
-            catch(Exception)
+            catch (Exception)
             {
-                return BadRequest();
+                return View(editQuestion);
             }
         }
 
         [Authorize]
         [HttpPut]
-        public IActionResult EditQuestionVotes([FromBody]Question editQuestion)
+        public IActionResult EditQuestionVotes([FromBody]IQuestion editQuestion)
         {
             try
             {
                 var newQuestion = _questionsService.EditQuestion(editQuestion);
-                return Ok(newQuestion);
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception)
             {
-                return BadRequest();
+                return RedirectToAction(nameof(Index));
             }
         }
 
-        [Authorize]
-        [HttpDelete("{questionId}")]
-        public async Task<IActionResult> DeleteQuestion(int questionId)
+        // GET: Questions/Delete/5
+        //public ActionResult Delete(int id)
+        //{
+        //    return View();
+        //}
+
+        // POST: Questions/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Delete(int id)
         {
             try
             {
+                // TODO: Add delete logic here
                 var user = await _userManager.GetUserAsync(HttpContext.User);
-                _questionsService.DeleteQuestion(questionId, user);
-                return Ok();
+                _questionsService.DeleteQuestion(id, user);
+                return RedirectToAction(nameof(Index));
             }
-            catch(Exception)
+            catch
             {
-                return BadRequest();
+                return View();
             }
         }
     }

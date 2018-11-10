@@ -50,6 +50,7 @@ namespace StackUnderFlow.Business
                 newQuestion.DownVotes = 0;
                 newQuestion.CreatedDate = DateTime.Now;
                 _context.Questions.Add(newQuestion);
+                _context.SaveChanges();
                 return newQuestion;
             }
             catch(Exception)
@@ -65,9 +66,9 @@ namespace StackUnderFlow.Business
                 var question = _context.Questions.SingleOrDefault(ques => ques.Id == editQuestion.Id && ques.AuthorId == user.Id);
                 question.Title = editQuestion.Title;
                 question.Body = editQuestion.Body;
-                question.Topics = editQuestion.Topics;
                 question.Answered = editQuestion.Answered;
                 _context.Questions.Update(question);
+                _context.SaveChanges();
                 return question;
             }
             catch(Exception)
@@ -76,13 +77,14 @@ namespace StackUnderFlow.Business
             }
         }
 
-        public Question EditQuestion(Question editQuestion)
+        public Question EditQuestion(IQuestion editQuestion)
         {
             try
             {
                 var question = _context.Questions.SingleOrDefault(ques => ques.Id == editQuestion.Id);
                 question = QuestionValidator.ValidateQuestionChanges(question, editQuestion);
                 _context.Questions.Update(question);
+                _context.SaveChanges();
                 return question;
             }
             catch(Exception)
@@ -99,6 +101,7 @@ namespace StackUnderFlow.Business
                 if (questionToDelete.AuthorId == user.Id)
                 {
                     _context.Questions.Remove(questionToDelete);
+                    _context.SaveChanges();
                 }
                 else
                 {

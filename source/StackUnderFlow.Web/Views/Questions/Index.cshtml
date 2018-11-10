@@ -1,0 +1,87 @@
+﻿@model IEnumerable<StackUnderFlow.Entities.Question>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Body)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Author)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AuthorId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Answered)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Inappropriate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpVotes)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DownVotes)
+            </th>
+            <th>
+                <p>Actions</p>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Body)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Author)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AuthorId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Answered)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Inappropriate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpVotes)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DownVotes)
+            </td>
+            <td>
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
