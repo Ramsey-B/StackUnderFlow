@@ -93,7 +93,7 @@ namespace StackUnderFlow.Web.Controllers
         // POST: Questions/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(int questionId, [Bind("Title,Body,Answered,Inappropriate,UpVotes,DownVotes,Topics")]Question editQuestion)
+        public async Task<ActionResult> Edit(int questionId, [Bind("Title,Body,Answered,Topics")]Question editQuestion)
         {
             try
             {
@@ -110,7 +110,7 @@ namespace StackUnderFlow.Web.Controllers
 
         [Authorize]
         [HttpPut]
-        public IActionResult EditQuestionVotes([FromBody]IQuestion editQuestion)
+        public IActionResult EditQuestionVotes([Bind("UpVote,DownVote,Inappropriate")]Question editQuestion)
         {
             try
             {

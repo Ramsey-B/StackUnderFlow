@@ -77,7 +77,7 @@ namespace StackUnderFlow.Business
             }
         }
 
-        public Question EditQuestion(IQuestion editQuestion)
+        public Question EditQuestion(Question editQuestion)
         {
             try
             {

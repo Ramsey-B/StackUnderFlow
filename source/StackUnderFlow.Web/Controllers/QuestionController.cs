@@ -128,7 +128,7 @@ namespace StackUnderFlow.Web.Controllers
 
         [Authorize]
         [HttpPut]
-        public IActionResult EditQuestionVotes([FromBody]IQuestion editQuestion)
+        public IActionResult EditQuestionVotes([FromBody]Question editQuestion)
         {
             try
             {

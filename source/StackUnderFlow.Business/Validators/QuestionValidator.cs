@@ -17,7 +17,7 @@ namespace StackUnderFlow.Business.Validators
             return question;
         }
 
-        public static Question ValidateQuestionChanges(Question realQ, IQuestion submitQ)
+        public static Question ValidateQuestionChanges(Question realQ, Question submitQ)
         {
             if (realQ.UpVotes != submitQ.UpVotes)
             {
