@@ -86,12 +86,12 @@ namespace StackUnderFlow.Web.Controllers
         }
 
         [Authorize]
-        [HttpPut]
-        public IActionResult EditResponseVotes([FromBody]Comment editComment)
+        [HttpGet("{command}/{commentId}")]
+        public IActionResult EditResponseVotes(string command, int commentId)
         {
             try
             {
-                var newComment = _commentsService.EditComment(editComment);
+                var newComment = _commentsService.EditCommentVotes(command, commentId);
                 return Ok(newComment);
             }
             catch (Exception)
@@ -102,12 +102,12 @@ namespace StackUnderFlow.Web.Controllers
 
         [Authorize]
         [HttpDelete("{commentId}")]
-        public async Task<IActionResult> DeleteResponse(int commentId)
+        public async Task<IActionResult> DeleteComment(int commentId)
         {
             try
             {
                 var user = await _userManager.GetUserAsync(HttpContext.User);
-                _commentsService.DeleteResponse(commentId, user);
+                _commentsService.DeleteComment(commentId, user);
                 return Ok();
             }
             catch (Exception)

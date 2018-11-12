@@ -20,7 +20,10 @@ namespace StackUnderFlow.Business
 
         public IEnumerable<Response> GetResponses(int questionId)
         {
-            return _context.Responses.Where(response => response.QuestionId == questionId).ToList();
+            return _context.Responses.Where(response => response.QuestionId == questionId).ToList()
+                .OrderBy(response => response.Solution)
+                .ThenBy(response => response.Inappropriate)
+                .ThenBy(response => response.UpVotes);
         }
 
         public Response GetResponsesById(int responseId)
@@ -38,7 +41,7 @@ namespace StackUnderFlow.Business
                 newResponse.UpVotes = 0;
                 newResponse.DownVotes = 0;
                 newResponse.Inappropriate = 0;
-                newResponse.Question = _context.Questions.SingleOrDefault(question => question.Id == newResponse.Id);
+                newResponse.Question = _context.Questions.SingleOrDefault(question => question.Id == newResponse.QuestionId);
                 newResponse.Solution = false;
                 _context.Responses.Add(newResponse);
                 _context.SaveChanges();
@@ -56,10 +59,6 @@ namespace StackUnderFlow.Business
             {
                 var response = _context.Responses.SingleOrDefault(res => res.Id == editResponse.Id && res.AuthorId == user.Id);
                 response.Body = editResponse.Body;
-                if (response.Solution != editResponse.Solution && response.Question.AuthorId == user.Id)
-                {
-                    response.Solution = editResponse.Solution;
-                }
                 _context.Responses.Update(response);
                 _context.SaveChanges();
                 return response;
@@ -70,12 +69,12 @@ namespace StackUnderFlow.Business
             }
         }
 
-        public Response EditResponse(Response editResponse)
+        public Response EditResponseVotes(string command, int responseId)
         {
             try
             {
-                var response = _context.Responses.SingleOrDefault(res => res.Id == editResponse.Id);
-                response = ResponseValidator.ValidateResponseChanges(response, editResponse);
+                var response = _context.Responses.SingleOrDefault(res => res.Id == responseId);
+                response = ResponseValidator.ValidateCommand(response, command);
                 _context.Responses.Update(response);
                 _context.SaveChanges();
                 return response;
@@ -86,7 +85,7 @@ namespace StackUnderFlow.Business
             }
         }
 
-        public void DeleteResponse(int responseId, IdentityUser user)
+        public Response DeleteResponse(int responseId, IdentityUser user)
         {
             try
             {
@@ -100,11 +99,30 @@ namespace StackUnderFlow.Business
                 {
                     throw new Exception("Not Authorized to remove this record");
                 }
+                return responseToDelete;
             }
             catch (Exception)
             {
                 throw;
             }
+        }
+
+        public Response MarkAsSolution(int responseId, IdentityUser user)
+        {
+            var response = GetResponsesById(responseId);
+            if (user.Id == response.Question.AuthorId)
+            {
+                response.Solution = !response.Solution;
+                _context.Responses.Update(response);
+                if (response.Solution)
+                {
+                    var question = _context.Questions.SingleOrDefault(ques => ques.Id == response.QuestionId);
+                    question.Answered = true;
+                    _context.Questions.Update(question);
+                }
+                _context.SaveChanges();
+            }
+            return response;
         }
     }
 }

@@ -1,22 +1,19 @@
-﻿@model IEnumerable<StackUnderFlow.Entities.Question>
+﻿@model IEnumerable<StackUnderFlow.Entities.Comment>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "GetComments";
 }
 
-<h2>Index</h2>
+<h2>GetComments</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="CreateComment" asp-route-id="@ViewData["ResponseId"]">Create New</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Body)
+                @Html.DisplayNameFor(model => model.Inappropriate)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Author)
@@ -25,10 +22,7 @@
                 @Html.DisplayNameFor(model => model.AuthorId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Answered)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Inappropriate)
+                @Html.DisplayNameFor(model => model.Body)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.CreatedDate)
@@ -40,18 +34,16 @@
                 @Html.DisplayNameFor(model => model.DownVotes)
             </th>
             <th>
-                <p>Actions</p>
+                @Html.DisplayNameFor(model => model.Response)
             </th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Body)
+                @Html.DisplayFor(modelItem => item.Inappropriate)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Author)
@@ -60,10 +52,7 @@
                 @Html.DisplayFor(modelItem => item.AuthorId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Answered)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Inappropriate)
+                @Html.DisplayFor(modelItem => item.Body)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CreatedDate)
@@ -75,15 +64,12 @@
                 @Html.DisplayFor(modelItem => item.DownVotes)
             </td>
             <td>
-                @Html.ActionLink("UpVote", "EditQuestionVotes", "Questions", new { id = item.Id, command = "upvote" }, null)
-                @Html.ActionLink("DownVote", "EditQuestionVotes", "Questions", new { id = item.Id, command = "downvote" }, null)
-                @Html.ActionLink("Mark Innappropriate", "EditQuestionVotes", "Questions", new { id = item.Id, command = "innappropriate" }, null)
+                @Html.DisplayFor(modelItem => item.Response.Id)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                @Html.ActionLink("Delete", "DeleteQuestion", "Questions", new { id = item.Id }, null)
-                <a asp-action="GetResponses" asp-route-id="@item.Id" asp-controller="Responses">Responses</a>
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>
 }

@@ -16,22 +16,22 @@ namespace StackUnderFlow.Business.Validators
             return response;
         }
 
-        public static Response ValidateResponseChanges(Response realRes, Response submitRes)
+        public static Response ValidateCommand(Response response, string command)
         {
-            if (realRes.UpVotes != submitRes.UpVotes)
+            if (command == "upvote")
             {
-                realRes.UpVotes++;
+                response.UpVotes++;
             }
-            if (realRes.DownVotes != submitRes.DownVotes)
+            if (command == "downvote")
             {
-                realRes.DownVotes++;
+                response.DownVotes++;
             }
-            if (realRes.Inappropriate != submitRes.Inappropriate)
+            if (command == "innappropriate")
             {
-                realRes.Inappropriate++;
-                realRes = ValidateIsAppropriate(realRes);
+                response.Inappropriate++;
+                response = ValidateIsAppropriate(response);
             }
-            return realRes;
+            return response;
         }
     }
 }

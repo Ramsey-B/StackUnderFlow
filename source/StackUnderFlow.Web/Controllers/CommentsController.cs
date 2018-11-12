@@ -22,12 +22,12 @@ namespace StackUnderFlow.Web.Controllers
             _userManager = userManager;
         }
         
-        [HttpGet("response/{responseId}")]
-        public ActionResult GetComments(int responseId)
+        public ActionResult GetComments(int id)
         {
             try
             {
-                var comments = _commentsService.GetComments(responseId);
+                ViewData["ResponseId"] = id;
+                var comments = _commentsService.GetComments(id);
                 return View(comments);
             }
             catch (Exception)
@@ -36,7 +36,6 @@ namespace StackUnderFlow.Web.Controllers
             }
         }
         
-        [HttpGet("{commentId}")]
         public ActionResult GetCommentById(int commentId)
         {
             try
@@ -50,12 +49,19 @@ namespace StackUnderFlow.Web.Controllers
             }
         }
 
+        public ActionResult CreateComment(int id)
+        {
+            ViewData["ResponseId"] = id;
+            return View();
+        }
+
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult> CreateComment([Bind("Body,ResponseId")]Comment newComment)
+        public async Task<ActionResult> CreateComment([Bind("Body,ResponseId")]Comment newComment, int id)
         {
             try
             {
+                newComment.ResponseId = id;
                 var user = await _userManager.GetUserAsync(HttpContext.User);
                 var comment = _commentsService.CreateComment(newComment, user);
                 return RedirectToAction(nameof(GetComments));
@@ -66,7 +72,12 @@ namespace StackUnderFlow.Web.Controllers
             }
         }
 
-        [HttpPut("{commentId}")]
+        public IActionResult EditComment(int id)
+        {
+            return View();
+        }
+
+        [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
         public async Task<ActionResult> EditComment(int commentId, [Bind("Body")]Comment editComment)
@@ -84,20 +95,23 @@ namespace StackUnderFlow.Web.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpGet]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public ActionResult EditCommentVotes([Bind("UpVotes,DownVotes,Inappropriate")]Comment editComment)
+        public ActionResult EditCommentVotes(string command, int commentId)
         {
-            try
-            {
-                var newComment = _commentsService.EditComment(editComment);
-                return RedirectToAction(nameof(GetComments));
-            }
-            catch (Exception)
-            {
-                return View(editComment);
-            }
+            var newComment = _commentsService.EditCommentVotes(command, commentId);
+            return RedirectToAction(nameof(GetComments), new { id = newComment.ResponseId });
+        }
+
+        [HttpGet]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteComment(int commentId)
+        {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var deletedComment = _commentsService.DeleteComment(commentId, user);
+            return RedirectToAction(nameof(GetComments), new { deletedComment.ResponseId });
         }
     }
 }

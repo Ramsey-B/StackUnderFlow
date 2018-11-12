@@ -86,12 +86,12 @@ namespace StackUnderFlow.Web.Controllers
         }
 
         [Authorize]
-        [HttpPut]
-        public IActionResult EditResponseVotes([FromBody]Response editResponse)
+        [HttpGet("{command}/{responseId}")]
+        public IActionResult EditResponseVotes(string command, int responseId)
         {
             try
             {
-                var newResponse = _responsesService.EditResponse(editResponse);
+                var newResponse = _responsesService.EditResponseVotes(command, responseId);
                 return Ok(newResponse);
             }
             catch (Exception)

@@ -19,7 +19,9 @@ namespace StackUnderFlow.Business
 
         public IEnumerable<Question> GetQuestions()
         {
-            return _context.Questions.ToList();
+            return _context.Questions.ToList()
+                .OrderBy(question => question.Inappropriate)
+                .ThenBy(question => question.UpVotes);
         }
 
         public Question GetQuestionById(int questionId)
@@ -77,12 +79,12 @@ namespace StackUnderFlow.Business
             }
         }
 
-        public Question EditQuestion(Question editQuestion)
+        public Question EditQuestionVotes(string command, int questionId)
         {
             try
             {
-                var question = _context.Questions.SingleOrDefault(ques => ques.Id == editQuestion.Id);
-                question = QuestionValidator.ValidateQuestionChanges(question, editQuestion);
+                var question = _context.Questions.SingleOrDefault(ques => ques.Id == questionId);
+                question = QuestionValidator.ValidateCommand(question, command);
                 _context.Questions.Update(question);
                 _context.SaveChanges();
                 return question;

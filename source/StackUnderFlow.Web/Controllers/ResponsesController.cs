@@ -21,13 +21,13 @@ namespace StackUnderFlow.Web.Controllers
             _responsesService = responsesService;
             _userManager = userManager;
         }
-
-        [HttpGet("question/{questionId}")]
-        public IActionResult GetResponses(int questionId)
+        
+        public IActionResult GetResponses(int id)
         {
             try
             {
-                var responses = _responsesService.GetResponses(questionId);
+                ViewData["QuestionId"] = id;
+                var responses = _responsesService.GetResponses(id);
                 return View(responses);
             }
             catch (Exception)
@@ -35,13 +35,12 @@ namespace StackUnderFlow.Web.Controllers
                 return NotFound();
             }
         }
-
-        [HttpGet("{responseId}")]
-        public IActionResult GetResponseById(int responseId)
+       
+        public IActionResult GetResponseById(int id)
         {
             try
             {
-                var response = _responsesService.GetResponsesById(responseId);
+                var response = _responsesService.GetResponsesById(id);
                 return View(response);
             }
             catch (Exception)
@@ -50,15 +49,22 @@ namespace StackUnderFlow.Web.Controllers
             }
         }
 
-        [HttpPost]
+        public IActionResult CreateResponse(int id)
+        {
+            ViewData["QuestionId"] = id;
+            return View();
+        }
+        
         [Authorize]
-        public async Task<IActionResult> CreateResponse([Bind("Body")]Response newResponse)
+        [HttpPost]
+        public async Task<IActionResult> CreateResponse([Bind("Body")]Response newResponse, int id)
         {
             try
             {
+                newResponse.QuestionId = id;
                 var user = await _userManager.GetUserAsync(HttpContext.User);
                 var response = _responsesService.CreateResponse(newResponse, user);
-                return RedirectToAction(nameof(GetResponses));
+                return RedirectToAction(nameof(GetResponses), new { id = response.QuestionId });
             }
             catch (Exception)
             {
@@ -66,16 +72,21 @@ namespace StackUnderFlow.Web.Controllers
             }
         }
 
+        public IActionResult EditResponse(int id)
+        {
+            return View();
+        }
+
         [Authorize]
-        [HttpPut("{responseId}")]
-        public async Task<IActionResult> EditResponse([Bind("Body")]Response editResponse, int responseId)
+        [HttpPost]
+        public async Task<IActionResult> EditResponse([Bind("Body, Solution")]Response editResponse, int id)
         {
             try
             {
-                editResponse.Id = responseId;
+                editResponse.Id = id;
                 var user = await _userManager.GetUserAsync(HttpContext.User);
                 var newResponse = _responsesService.EditResponse(editResponse, user);
-                return RedirectToAction(nameof(GetResponses));
+                return RedirectToAction(nameof(GetResponses), new { id = newResponse.QuestionId });
             }
             catch (Exception)
             {
@@ -84,27 +95,29 @@ namespace StackUnderFlow.Web.Controllers
         }
 
         [Authorize]
-        [HttpPut]
-        public IActionResult EditResponseVotes([Bind("UpVotes,DownVotes,Inappropriate,Solution")]Response editResponse)
+        [HttpGet]
+        public ActionResult EditResponseVotes(string command, int id)
         {
-            try
-            {
-                var newResponse = _responsesService.EditResponse(editResponse);
-                return RedirectToAction(nameof(GetResponses));
-            }
-            catch (Exception)
-            {
-                return View(editResponse);
-            }
+            var newResponse = _responsesService.EditResponseVotes(command, id);
+            return RedirectToAction(nameof(GetResponses), new { id = newResponse.QuestionId });
         }
 
         [Authorize]
-        [HttpDelete("{responseId}")]
-        public async Task<IActionResult> DeleteResponse(int responseId)
+        [HttpGet]
+        public async Task<ActionResult> MarkSolution(int responseId)
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            _responsesService.DeleteResponse(responseId, user);
-            return RedirectToAction(nameof(GetResponses));
+            var response = _responsesService.MarkAsSolution(responseId, user);
+            return RedirectToAction(nameof(GetResponses), new { id = response.QuestionId });
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> DeleteResponse(int id)
+        {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var deletedResponse = _responsesService.DeleteResponse(id, user);
+            return RedirectToAction(nameof(GetResponses), new { id = deletedResponse.QuestionId });
         }
     }
 }

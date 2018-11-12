@@ -1,0 +1,72 @@
+﻿@model StackUnderFlow.Entities.Response
+
+@{
+    ViewData["Title"] = "GetResponseById";
+}
+
+<h2>GetResponseById</h2>
+
+<div>
+    <h4>Response</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Solution)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Solution)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Inappropriate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Inappropriate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Author)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Author)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.AuthorId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.AuthorId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Body)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Body)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CreatedDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.UpVotes)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.UpVotes)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DownVotes)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DownVotes)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Question)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Question.Id)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

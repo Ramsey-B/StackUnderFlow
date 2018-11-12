@@ -7,7 +7,7 @@ namespace StackUnderFlow.Business.Validators
 {
     internal static class CommentValidator
     {
-        public static Comment ValidateIsAppropriate(Comment comment)
+        internal static Comment ValidateIsAppropriate(Comment comment)
         {
             if (comment.Inappropriate > 5)
             {
@@ -16,22 +16,22 @@ namespace StackUnderFlow.Business.Validators
             return comment;
         }
 
-        public static Comment ValidateCommentChanges(Comment realCom, Comment submitCom)
+        internal static Comment ValidateCommand(Comment comment, string command)
         {
-            if (realCom.UpVotes != submitCom.UpVotes)
+            if (command == "upvote")
             {
-                realCom.UpVotes++;
+                comment.UpVotes++;
             }
-            if (realCom.DownVotes != submitCom.DownVotes)
+            if (command == "downvote")
             {
-                realCom.DownVotes++;
+                comment.DownVotes++;
             }
-            if (realCom.Inappropriate != submitCom.Inappropriate)
+            if (command == "innappropriate")
             {
-                realCom.Inappropriate++;
-                realCom = ValidateIsAppropriate(realCom);
+                comment.Inappropriate++;
+                comment = ValidateIsAppropriate(comment);
             }
-            return realCom;
+            return comment;
         }
     }
 }

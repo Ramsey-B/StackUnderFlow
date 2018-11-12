@@ -38,7 +38,7 @@ namespace StackUnderFlow.Business
                 newComment.UpVotes = 0;
                 newComment.DownVotes = 0;
                 newComment.Inappropriate = 0;
-                newComment.Response = _context.Responses.SingleOrDefault(response => response.Id == newComment.Id);
+                newComment.Response = _context.Responses.SingleOrDefault(response => response.Id == newComment.ResponseId);
                 _context.Comments.Add(newComment);
                 _context.SaveChanges();
                 return newComment;
@@ -65,23 +65,7 @@ namespace StackUnderFlow.Business
             }
         }
 
-        public Comment EditComment(Comment editComment)
-        {
-            try
-            {
-                var comment = _context.Comments.SingleOrDefault(com => com.Id == editComment.Id);
-                comment = CommentValidator.ValidateCommentChanges(comment, editComment);
-                _context.Comments.Update(comment);
-                _context.SaveChanges();
-                return comment;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        public void DeleteResponse(int commentId, IdentityUser user)
+        public Comment DeleteComment(int commentId, IdentityUser user)
         {
             try
             {
@@ -95,6 +79,23 @@ namespace StackUnderFlow.Business
                 {
                     throw new Exception("Not Authorized to remove this record");
                 }
+                return commentToDelete;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public Comment EditCommentVotes(string command, int commentId)
+        {
+            try
+            {
+                var comment = _context.Comments.SingleOrDefault(com => com.Id == commentId);
+                comment = CommentValidator.ValidateCommand(comment, command);
+                _context.Comments.Update(comment);
+                _context.SaveChanges();
+                return comment;
             }
             catch (Exception)
             {

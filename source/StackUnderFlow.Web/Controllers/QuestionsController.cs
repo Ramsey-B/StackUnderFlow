@@ -54,6 +54,7 @@ namespace StackUnderFlow.Web.Controllers
         // POST: Questions/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<ActionResult> Create([Bind("Title,Body,Author,AuthorId,Answered,Inappropriate,UpVotes,DownVotes,Id,Topics")]Question newQuestion)
         {
             try
@@ -87,12 +88,14 @@ namespace StackUnderFlow.Web.Controllers
         // GET: Questions/Edit/5
         public ActionResult Edit(int id)
         {
+            ViewData["questionId"] = id;
             return View();
         }
 
         // POST: Questions/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<ActionResult> Edit(int questionId, [Bind("Title,Body,Answered,Topics")]Question editQuestion)
         {
             try
@@ -108,19 +111,12 @@ namespace StackUnderFlow.Web.Controllers
             }
         }
 
+        [HttpGet]
         [Authorize]
-        [HttpPut]
-        public IActionResult EditQuestionVotes([Bind("UpVote,DownVote,Inappropriate")]Question editQuestion)
+        public IActionResult EditQuestionVotes(string command, int id)
         {
-            try
-            {
-                var newQuestion = _questionsService.EditQuestion(editQuestion);
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception)
-            {
-                return RedirectToAction(nameof(Index));
-            }
+            var newQuestion = _questionsService.EditQuestionVotes(command, id);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Questions/Delete/5
@@ -130,21 +126,13 @@ namespace StackUnderFlow.Web.Controllers
         //}
 
         // POST: Questions/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(int id)
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult> DeleteQuestion(int id)
         {
-            try
-            {
-                // TODO: Add delete logic here
-                var user = await _userManager.GetUserAsync(HttpContext.User);
-                _questionsService.DeleteQuestion(id, user);
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            _questionsService.DeleteQuestion(id, user);
+            return RedirectToAction(nameof(Index));
         }
     }
 }
