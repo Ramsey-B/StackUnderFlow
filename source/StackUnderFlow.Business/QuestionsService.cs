@@ -21,7 +21,9 @@ namespace StackUnderFlow.Business
         {
             return _context.Questions.ToList()
                 .OrderBy(question => question.Inappropriate)
-                .ThenBy(question => question.UpVotes);
+                .ThenByDescending(question => question.Answered)
+                .ThenByDescending(question => question.UpVotes)
+                .ThenBy(question => question.DownVotes);
         }
 
         public Question GetQuestionById(int questionId)

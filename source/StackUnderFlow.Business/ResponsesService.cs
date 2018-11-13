@@ -21,9 +21,10 @@ namespace StackUnderFlow.Business
         public IEnumerable<Response> GetResponses(int questionId)
         {
             return _context.Responses.Where(response => response.QuestionId == questionId).ToList()
-                .OrderBy(response => response.Solution)
+                .OrderByDescending(response => response.Solution)
+                .ThenBy(response => response.Inappropriate)
                 .ThenByDescending(response => response.UpVotes)
-                .ThenBy(response => response.Inappropriate);
+                .ThenBy(response => response.DownVotes);
         }
 
         public Response GetResponsesById(int responseId)
