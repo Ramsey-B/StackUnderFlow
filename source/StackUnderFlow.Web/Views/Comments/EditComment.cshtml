@@ -10,48 +10,13 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="EditComment">
+        <form asp-action="EditComment" asp-route-id="Id">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="ResponseId" class="control-label"></label>
-                <select asp-for="ResponseId" class="form-control" asp-items="ViewBag.ResponseId"></select>
-                <span asp-validation-for="ResponseId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Inappropriate" class="control-label"></label>
-                <input asp-for="Inappropriate" class="form-control" />
-                <span asp-validation-for="Inappropriate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Author" class="control-label"></label>
-                <input asp-for="Author" class="form-control" />
-                <span asp-validation-for="Author" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AuthorId" class="control-label"></label>
-                <input asp-for="AuthorId" class="form-control" />
-                <span asp-validation-for="AuthorId" class="text-danger"></span>
-            </div>
             <div class="form-group">
                 <label asp-for="Body" class="control-label"></label>
                 <input asp-for="Body" class="form-control" />
                 <span asp-validation-for="Body" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedDate" class="control-label"></label>
-                <input asp-for="CreatedDate" class="form-control" />
-                <span asp-validation-for="CreatedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UpVotes" class="control-label"></label>
-                <input asp-for="UpVotes" class="form-control" />
-                <span asp-validation-for="UpVotes" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DownVotes" class="control-label"></label>
-                <input asp-for="DownVotes" class="form-control" />
-                <span asp-validation-for="DownVotes" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-default" />

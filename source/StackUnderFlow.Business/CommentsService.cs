@@ -20,7 +20,9 @@ namespace StackUnderFlow.Business
 
         public IEnumerable<Comment> GetComments(int responseId)
         {
-            return _context.Comments.Where(comment => comment.ResponseId == responseId).ToList();
+            return _context.Comments.Where(comment => comment.ResponseId == responseId).ToList()
+                .OrderByDescending(comment => comment.UpVotes)
+                .ThenBy(comment => comment.Inappropriate);
         }
 
         public Comment GetCommentById(int commentId)

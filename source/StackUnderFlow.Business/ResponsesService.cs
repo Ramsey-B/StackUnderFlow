@@ -22,8 +22,8 @@ namespace StackUnderFlow.Business
         {
             return _context.Responses.Where(response => response.QuestionId == questionId).ToList()
                 .OrderBy(response => response.Solution)
-                .ThenBy(response => response.Inappropriate)
-                .ThenBy(response => response.UpVotes);
+                .ThenByDescending(response => response.UpVotes)
+                .ThenBy(response => response.Inappropriate);
         }
 
         public Response GetResponsesById(int responseId)
@@ -110,15 +110,15 @@ namespace StackUnderFlow.Business
         public Response MarkAsSolution(int responseId, IdentityUser user)
         {
             var response = GetResponsesById(responseId);
-            if (user.Id == response.Question.AuthorId)
+            var resQuestion = _context.Questions.SingleOrDefault(question => question.Id == response.QuestionId);
+            if (user.Id == resQuestion.AuthorId)
             {
                 response.Solution = !response.Solution;
                 _context.Responses.Update(response);
                 if (response.Solution)
                 {
-                    var question = _context.Questions.SingleOrDefault(ques => ques.Id == response.QuestionId);
-                    question.Answered = true;
-                    _context.Questions.Update(question);
+                    resQuestion.Answered = true;
+                    _context.Questions.Update(resQuestion);
                 }
                 _context.SaveChanges();
             }

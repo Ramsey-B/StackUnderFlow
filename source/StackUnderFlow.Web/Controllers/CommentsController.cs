@@ -64,7 +64,7 @@ namespace StackUnderFlow.Web.Controllers
                 newComment.ResponseId = id;
                 var user = await _userManager.GetUserAsync(HttpContext.User);
                 var comment = _commentsService.CreateComment(newComment, user);
-                return RedirectToAction(nameof(GetComments));
+                return RedirectToAction(nameof(GetComments), new { id = newComment.ResponseId});
             }
             catch (Exception)
             {
@@ -74,20 +74,20 @@ namespace StackUnderFlow.Web.Controllers
 
         public IActionResult EditComment(int id)
         {
+            ViewData["commentId"] = id;
             return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<ActionResult> EditComment(int commentId, [Bind("Body")]Comment editComment)
+        [HttpPost]
+        public async Task<ActionResult> EditComment([Bind("Body")]Comment editComment, int id)
         {
             try
             {
-                editComment.Id = commentId;
+                editComment.Id = id;
                 var user = await _userManager.GetUserAsync(HttpContext.User);
-                var newResponse = _commentsService.EditComment(editComment, user);
-                return RedirectToAction(nameof(GetComments));
+                var newComment = _commentsService.EditComment(editComment, user);
+                return RedirectToAction(nameof(GetComments), new { id = newComment.ResponseId});
             }
             catch (Exception)
             {
@@ -96,7 +96,6 @@ namespace StackUnderFlow.Web.Controllers
         }
 
         [HttpGet]
-        [ValidateAntiForgeryToken]
         [Authorize]
         public ActionResult EditCommentVotes(string command, int commentId)
         {
@@ -106,7 +105,6 @@ namespace StackUnderFlow.Web.Controllers
 
         [HttpGet]
         [Authorize]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteComment(int commentId)
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);

@@ -36,7 +36,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Response)
             </th>
-            <th></th>
+            <th>
+                <p>Actions</p>
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -67,9 +69,14 @@
                 @Html.DisplayFor(modelItem => item.Response.Id)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                @Html.ActionLink("UpVote", "EditCommentVotes", "Comments", new { commentId = item.Id, command = "upvote" }, null)
+                @Html.ActionLink("DownVote", "EditCommentVotes", "Comments", new { commentId = item.Id, command = "downvote" }, null)
+                @Html.ActionLink("Mark Innappropriate", "EditCommentVotes", "Comments", new { commentId = item.Id, command = "innappropriate" }, null)
+            </td>
+            <td>
+                <a asp-action="EditComment" asp-route-commentId="@item.Id">Edit</a> |
+                <a asp-action="GetCommentById" asp-route-commentId="@item.Id">Details</a> |
+                <a asp-action="DeleteComment" asp-route-commentId="@item.Id">Delete</a>
             </td>
         </tr>
 }
