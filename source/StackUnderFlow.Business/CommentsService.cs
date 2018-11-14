@@ -21,8 +21,7 @@ namespace StackUnderFlow.Business
         public IEnumerable<Comment> GetComments(int responseId)
         {
             return _context.Comments.Where(comment => comment.ResponseId == responseId).ToList()
-                .OrderByDescending(comment => comment.Solution)
-                .ThenBy(comment => comment.Inappropriate)
+                .OrderBy(comment => comment.Inappropriate)
                 .ThenByDescending(comment => comment.UpVotes)
                 .ThenBy(comment => comment.DownVotes);
         }
